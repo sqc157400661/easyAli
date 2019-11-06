@@ -40,12 +40,12 @@ $app->register(Shiqc\AliSDK\AlipayServiceProvider::class);
 ```
 
 由于Lumen的`artisan`命令不支持`vendor:publish`,需要自己手动将`src/config`下的配置文件拷贝到项目的`config`目录下,
-并将`config.php`改名成`latrell-alipay.php`,
-`mobile.php`改名成`latrell-alipay-mobile.php`,
-`web.php`改名成`latrell-alipay-web.php`.
+并将`config.php`改名成`shiqc-alisdk.php`,
+`mobile.php`改名成`shiqc-alisdk-mobile.php`,
+`web.php`改名成`shiqc-alisdk-web.php`.
 
 ### 说明
-配置文件 `config/latrell-alipay.php` 为公共配置信息文件， `config/latrell-alipay-web.php` 为Web版支付宝SDK配置， `config/latrell-alipay-mobile.php` 为手机端支付宝SDK配置。
+配置文件 `config/shiqc-alisdk.php` 为公共配置信息文件， `config/shiqc-alisdk-web.php` 为Web版支付宝SDK配置， `config/shiqc-alisdk-mobile.php` 为手机端支付宝SDK配置。
 
 ## 例子
 
@@ -55,30 +55,30 @@ $app->register(Shiqc\AliSDK\AlipayServiceProvider::class);
 
 ```php
 	// 创建支付单。
-	$alipay = app('alipay.web');
-	$alipay->setOutTradeNo('order_id');
-	$alipay->setTotalFee('order_price');
-	$alipay->setSubject('goods_name');
-	$alipay->setBody('goods_description');
+	$alisdk = app('alisdk.web');
+	$alisdk->setOutTradeNo('order_id');
+	$alisdk->setTotalFee('order_price');
+	$alisdk->setSubject('goods_name');
+	$alisdk->setBody('goods_description');
 	
-	$alipay->setQrPayMode('4'); //该设置为可选，添加该参数设置，支持二维码支付。
+	$alisdk->setQrPayMode('4'); //该设置为可选，添加该参数设置，支持二维码支付。
 
 	// 跳转到支付页面。
-	return redirect()->to($alipay->getPayLink());
+	return redirect()->to($alisdk->getPayLink());
 ```
 
 #### 手机端
 
 ```php
 	// 创建支付单。
-	$alipay = app('alipay.mobile');
-	$alipay->setOutTradeNo('order_id');
-	$alipay->setTotalFee('order_price');
-	$alipay->setSubject('goods_name');
-	$alipay->setBody('goods_description');
+	$alisdk = app('alisdk.mobile');
+	$alisdk->setOutTradeNo('order_id');
+	$alisdk->setTotalFee('order_price');
+	$alisdk->setSubject('goods_name');
+	$alisdk->setBody('goods_description');
 
 	// 返回签名后的支付参数给支付宝移动端的SDK。
-	return $alipay->getPayPara();
+	return $alisdk->getPayPara();
 ```
 
 ### 结果通知
@@ -92,7 +92,7 @@ $app->register(Shiqc\AliSDK\AlipayServiceProvider::class);
 	public function webNotify()
 	{
 		// 验证请求。
-		if (! app('alipay.web')->verify()) {
+		if (! app('alisdk.web')->verify()) {
 			Log::notice('Alipay notify post data verification fail.', [
 				'data' => Request::instance()->getContent()
 			]);
@@ -120,11 +120,11 @@ $app->register(Shiqc\AliSDK\AlipayServiceProvider::class);
 	public function webReturn()
 	{
 		// 验证请求。
-		if (! app('alipay.web')->verify()) {
+		if (! app('alisdk.web')->verify()) {
 			Log::notice('Alipay return query data verification fail.', [
 				'data' => Request::getQueryString()
 			]);
-			return view('alipay.fail');
+			return view('alisdk.fail');
 		}
 
 		// 判断通知类型。
@@ -139,7 +139,7 @@ $app->register(Shiqc\AliSDK\AlipayServiceProvider::class);
 				break;
 		}
 
-		return view('alipay.success');
+		return view('alisdk.success');
 	}
 ```
 
@@ -149,10 +149,10 @@ $app->register(Shiqc\AliSDK\AlipayServiceProvider::class);
 	/**
 	 * 支付宝异步通知
 	 */
-	public function alipayNotify()
+	public function alisdkNotify()
 	{
 		// 验证请求。
-		if (! app('alipay.mobile')->verify()) {
+		if (! app('alisdk.mobile')->verify()) {
 			Log::notice('Alipay notify post data verification fail.', [
 				'data' => Request::instance()->getContent()
 			]);
