@@ -5,5 +5,14 @@ return [
 	'partner_id' => '2088xxxxxxxxxxxx',
 
 	//卖家支付宝帐户。
-	'seller_id' => 'xxx@xxx.xxx'
+	'seller_id' => 'xxx@xxx.xxx',
+
+	//appid
+	'app_id' => 'xxx@xxx.xxx',
+
+	//应用私钥
+	'APP_PRIVATE_KEY' => 'xxx@xxx.xxx',
+
+	//应用公钥
+	'ALIPAY_PUBLIC_KEY' => 'xxx@xxx.xxx',
 ];
