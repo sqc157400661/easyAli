@@ -9,6 +9,7 @@ use Shiqc\AliSDK\MiniProgram\Pay\AopEncrypt;
 use Shiqc\AliSDK\MiniProgram\Pay\EncryptParseItem;
 use Shiqc\AliSDK\MiniProgram\Pay\EncryptResponseData;
 use Shiqc\AliSDK\MiniProgram\Pay\SignData;
+use \Exception;
 
 class AopClient {
 	//应用ID

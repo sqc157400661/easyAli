@@ -11,13 +11,17 @@ class SdkPayment
 
     private $app_version = '1.0';
 
+    private $service = 'alipay_trade_create_response';
+
     private $partner;
 
-    private $_input_charset = 'GBK';
+    private $_input_charset = 'UTF-8';
 
     private $sign_type = 'RSA2';
 
     private $format = 'json';
+
+    private $out_trade_no;
 
     private $app_id;
 
@@ -29,11 +33,11 @@ class SdkPayment
 
     private $return_url;
 
-    private $out_trade_no;
-
     private $payment_type = 1;
 
     private $seller_id;
+
+    private $buyer_id;
 
     private $total_fee;
 
@@ -73,67 +77,31 @@ class SdkPayment
         $aop->postCharset= $this->_input_charset;
         $aop->format= $this->format;
         $request = new AlipayTradeCreateRequest ();
-        $request->setBizContent("{" .
-            "\"out_trade_no\":\"20150320010101001\"," .
-            "\"seller_id\":\"2088102146225135\"," .
-            "\"total_amount\":88.88," .
-            "\"discountable_amount\":8.88," .
-            "\"subject\":\"Iphone6 16G\"," .
-            "\"body\":\"Iphone6 16G\"," .
-            "\"buyer_id\":\"2088102146225135\"," .
-            "      \"goods_detail\":[{" .
-            "        \"goods_id\":\"apple-01\"," .
-            "\"goods_name\":\"ipad\"," .
-            "\"quantity\":1," .
-            "\"price\":2000," .
-            "\"goods_category\":\"34543238\"," .
-            "\"categories_tree\":\"124868003|126232002|126252004\"," .
-            "\"body\":\"特价手机\"," .
-            "\"show_url\":\"http://www.alipay.com/xxx.jpg\"" .
-            "        }]," .
-            "\"product_code\":\"FACE_TO_FACE_PAYMENT\"," .
-            "\"operator_id\":\"Yx_001\"," .
-            "\"store_id\":\"NJ_001\"," .
-            "\"terminal_id\":\"NJ_T_001\"," .
-            "\"extend_params\":{" .
-            "\"sys_service_provider_id\":\"2088511833207846\"," .
-            "\"industry_reflux_info\":\"{\\\\\\\"scene_code\\\\\\\":\\\\\\\"metro_tradeorder\\\\\\\",\\\\\\\"channel\\\\\\\":\\\\\\\"xxxx\\\\\\\",\\\\\\\"scene_data\\\\\\\":{\\\\\\\"asset_name\\\\\\\":\\\\\\\"ALIPAY\\\\\\\"}}\"," .
-            "\"card_type\":\"S0JP0000\"" .
-            "    }," .
-            "\"timeout_express\":\"90m\"," .
-            "\"settle_info\":{" .
-            "        \"settle_detail_infos\":[{" .
-            "          \"trans_in_type\":\"cardAliasNo\"," .
-            "\"trans_in\":\"A0001\"," .
-            "\"summary_dimension\":\"A0001\"," .
-            "\"settle_entity_id\":\"2088xxxxx;ST_0001\"," .
-            "\"settle_entity_type\":\"SecondMerchant、Store\"," .
-            "\"amount\":0.1" .
-            "          }]" .
-            "    }," .
-            "\"logistics_detail\":{" .
-            "\"logistics_type\":\"EXPRESS\"" .
-            "    }," .
-            "\"business_params\":{" .
-            "\"campus_card\":\"0000306634\"" .
-            "    }," .
-            "\"receiver_address_info\":{" .
-            "\"name\":\"张三\"," .
-            "\"address\":\"上海市浦东新区陆家嘴银城中路501号\"," .
-            "\"mobile\":\"13120180615\"," .
-            "\"zip\":\"200120\"," .
-            "\"division_code\":\"310115\"" .
-            "    }" .
-            "  }");
-        $result = $aop->execute ( $request);
+        $content = array();
+        $request->setNotifyUrl($this->notify_url);
+        $content['out_trade_no'] = $this->out_trade_no;
+        $content['total_amount'] = $this->total_fee;
+        $content['subject'] = $this->subject;
+        $content['buyer_id'] = $this->buyer_id;
+        $content=json_encode($content);
+        $request->setBizContent($content);
+        $result = $aop->execute ($request);
+        $responseNode =$this->service;
+        return $result->$responseNode;
+//        $responseNode = str_replace(".", "_", $request->getApiMethodName()) . "_response";
+//        $resultCode = $result->$responseNode->code;
+//        if(!empty($resultCode)&&$resultCode == 10000){
+//            echo "成功";
+//        } else {
+//            echo "失败";
+//        }
+    }
 
-        $responseNode = str_replace(".", "_", $request->getApiMethodName()) . "_response";
-        $resultCode = $result->$responseNode->code;
-        if(!empty($resultCode)&&$resultCode == 10000){
-            echo "成功";
-        } else {
-            echo "失败";
-        }
+    public  function notify ($data){
+        $aop = new AopClient ();
+        $aop->alipayrsaPublicKey= $this->public_key; //'请填写支付宝公钥，一行字符串';
+        $flag = $aop->rsaCheckV1($data , NULL, "RSA2");
+        return $flag;
     }
 
 
@@ -142,6 +110,13 @@ class SdkPayment
         $this->partner = $partner;
         return $this;
     }
+
+    public function setOutTradeNo($out_trade_no)
+    {
+        $this->out_trade_no = $out_trade_no;
+        return $this;
+    }
+
     public function setAppId($appId)
     {
         $this->app_id = $appId;
@@ -157,12 +132,6 @@ class SdkPayment
     public function setReturnUrl($return_url)
     {
         $this->return_url = $return_url;
-        return $this;
-    }
-
-    public function setOutTradeNo($out_trade_no)
-    {
-        $this->out_trade_no = $out_trade_no;
         return $this;
     }
 
@@ -187,6 +156,11 @@ class SdkPayment
     public function setSellerId($seller_id)
     {
         $this->seller_id = $seller_id;
+        return $this;
+    }
+    public function setBuyerId($buyer_id)
+    {
+        $this->buyer_id = $buyer_id;
         return $this;
     }
 

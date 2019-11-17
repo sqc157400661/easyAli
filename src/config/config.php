@@ -7,9 +7,6 @@ return [
 	//卖家支付宝帐户。
 	'seller_id' => 'xxx@xxx.xxx',
 
-	//appid
-	'app_id' => 'xxx@xxx.xxx',
-
 	//应用私钥
 	'APP_PRIVATE_KEY' => 'xxx@xxx.xxx',
 
