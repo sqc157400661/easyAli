@@ -6,7 +6,7 @@ use Shiqc\AliSDK\MiniProgram\Auth\ServiceProvider;
 class AccessToken
 {
 	/**
-	 * 网关
+	 * 网关https://openapi.alipay.com/gateway.do
 	 */
 	const GATEWAYURL = 'https://openapi.alipay.com/gateway.do?';
 	/**
