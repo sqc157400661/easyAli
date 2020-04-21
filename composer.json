@@ -18,7 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-            "shiqc\\alisdk\\": "src/AliSDK/"
+            "Shiqc\\AliSDK\\": "src/AliSDK/"
         }
     },
     "minimum-stability": "stable"
