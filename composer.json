@@ -1,5 +1,6 @@
 {
-    "name": "shiqc",
+    "name": "shiqc/AliSDK",
+    "type": "library",
     "description": "支付宝SDK在Laravel5封装包。",
     "keywords": ["L5", "Laravel 5", "Laravel", "Alipay", "Alipay SDK"],
     "license": "MIT",
@@ -17,7 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Shiqc\\AliSDK\\": "src/AliSDK/"
+            "shiqc\\AliSDK\\": "src/AliSDK/"
         }
     },
     "minimum-stability": "stable"
